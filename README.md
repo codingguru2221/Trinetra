@@ -36,6 +36,58 @@ It empowers analysts and ethical hackers with actionable insights, ensuring that
   Provides organized results with descriptions, severity levels, and recommendations.
 
 
+
+## 🕵️ Attack Spectrum — What Trinetra Detects
+
+Trinetra’s scanning modules are built to recognize a **wide range of modern web attacks** — from the classic to the cutting-edge.
+It doesn’t just look for surface-level bugs; it exposes the *patterns of exploitation* that threaten your digital assets.
+
+### 🧩 Injection Attacks
+
+* **SQL Injection (SQLi)** — detects data manipulation or DB control via malicious queries.
+* **Command Injection** — identifies input vectors allowing OS command execution.
+* **LDAP & XML Injection (XXE)** — catches unsafe query and parser handling.
+* **NoSQL Injection** — finds query-based injections in document DBs (e.g., MongoDB).
+
+### ⚡ Cross-Site Threats
+
+* **Cross-Site Scripting (XSS)** — detects stored, reflected, and DOM-based XSS payloads.
+* **Cross-Site Request Forgery (CSRF)** — flags missing tokens and unsafe state-changing requests.
+* **Clickjacking** — identifies missing `X-Frame-Options` or CSP headers.
+
+### 🔐 Authentication & Access Flaws
+
+* **Broken Authentication** — weak login flows, credential exposures, insecure session IDs.
+* **Broken Access Control / IDOR** — detects endpoints exposing unauthorized data.
+* **Privilege Escalation Points** — scans for misconfigured role or permission boundaries.
+
+### 🧱 Server & Configuration Weaknesses
+
+* **Security Misconfiguration** — exposed admin panels, default creds, verbose error messages.
+* **Directory Traversal** — identifies path manipulation vulnerabilities.
+* **Insecure File Uploads** — detects unrestricted or malicious file handling.
+* **Unprotected Endpoints** — reveals APIs without auth or rate limits.
+
+### 🔒 Data & Privacy Risks
+
+* **Sensitive Data Exposure** — identifies unencrypted traffic, weak crypto, leaked secrets.
+* **Information Disclosure** — catches debug traces, stack dumps, or version leaks.
+* **Open Redirects** — finds redirect parameters that could enable phishing.
+
+### 🌐 Network & Server Attacks
+
+* **Server-Side Request Forgery (SSRF)** — detects outbound request abuse to internal systems.
+* **Host Header Injection** — identifies potential cache poisoning and redirection flaws.
+* **DNS Rebinding / Misrouted Calls** — highlights insecure server validation of hostnames.
+
+### ⚙️ Advanced Exploitation Vectors
+
+* **Remote Code Execution (RCE)** — analyzes input handling that may lead to code execution.
+* **Insecure Deserialization** — detects unsafe object parsing in serialized data streams.
+* **Prototype Pollution (JS Apps)** — flags client-side data structure manipulation risks.
+* **Cross-Origin Resource Sharing (CORS) Misconfigurations** — detects permissive origins and unsafe headers.
+
+
 ## 🔱 Why Trinetra?
 
 Because the first step to defense is **detection**.
@@ -61,10 +113,11 @@ Every vulnerability revealed is a step toward security.
 
 ## 🚀 Future Vision
 
-* Integration of **AI-driven vulnerability classification**.
-* Real-time **threat alerts and risk scoring**.
-* Support for **multi-domain scanning and report comparison**.
-* **Community plug-in system** for adding new vulnerability modules.
+* Integration of **AI-driven vulnerability classification**
+* Real-time **threat alerts and risk scoring**
+* Support for **multi-domain scanning and report comparison**
+* **Community plug-in system** for adding new vulnerability modules
+
 
 
 ## 🤝 Contribute
