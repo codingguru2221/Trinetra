@@ -1,6 +1,8 @@
 package com.trinetra.analyzer;
 
 import com.trinetra.utils.Logger;
+import com.trinetra.attacks.AnalyzerAttack;
+import com.trinetra.attacks.AnalyzerAttackFactory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,13 +51,13 @@ public class ThreatAnalyzer {
         Logger.info("ThreatAnalyzer: Starting threat analysis with arguments: " + Arrays.toString(args));
         
         // Parse arguments
-        String inputFile = null;
+        String target = null;
         boolean detailed = false;
         String analysisType = "general"; // default analysis type
         
         for (int i = 0; i < args.length; i++) {
-            if ("--file".equals(args[i]) && i + 1 < args.length) {
-                inputFile = args[i + 1];
+            if ("--target".equals(args[i]) && i + 1 < args.length) {
+                target = args[i + 1];
                 i++; // Skip next argument
             } else if ("--detailed".equals(args[i])) {
                 detailed = true;
@@ -65,68 +67,90 @@ public class ThreatAnalyzer {
             }
         }
         
-        if (inputFile == null) {
-            Logger.error("ThreatAnalyzer: No input file specified for analysis");
-            System.out.println("Error: Please specify an input file using --file <filename>");
+        if (target == null) {
+            Logger.error("ThreatAnalyzer: No target specified for analysis");
+            System.out.println("Error: Please specify a target using --target <url>");
             return;
         }
         
-        Logger.info("ThreatAnalyzer: Analyzing threats from file: " + inputFile);
+        Logger.info("ThreatAnalyzer: Analyzing threats on target: " + target);
         
         if (detailed) {
             Logger.debug("ThreatAnalyzer: Detailed analysis mode enabled");
         }
         
-        // Perform analysis based on type
+        // Perform analysis based on type using new attack classes
         switch (analysisType.toLowerCase()) {
+            case "sqli":
+                executeAnalyzerAttack("sqli", target);
+                break;
+            case "xss":
+                executeAnalyzerAttack("xss", target);
+                break;
             case "network":
-                performNetworkAnalysis(inputFile, detailed);
+                performNetworkAnalysis(target, detailed);
                 break;
             case "malware":
-                performMalwareAnalysis(inputFile, detailed);
+                performMalwareAnalysis(target, detailed);
                 break;
             case "behavioral":
-                performBehavioralAnalysis(inputFile, detailed);
+                performBehavioralAnalysis(target, detailed);
                 break;
             case "general":
             default:
-                performGeneralAnalysis(inputFile, detailed);
+                performGeneralAnalysis(target, detailed);
                 break;
         }
         
         Logger.info("ThreatAnalyzer: Threat analysis completed");
     }
     
-    private void performGeneralAnalysis(String inputFile, boolean detailed) {
-        System.out.println("Performing general threat analysis on " + inputFile + "...");
+    /**
+     * Execute a specific analyzer attack
+     * @param attackType Type of analyzer attack to execute
+     * @param target Target for the attack
+     */
+    private void executeAnalyzerAttack(String attackType, String target) {
+        try {
+            AnalyzerAttack attack = AnalyzerAttackFactory.createAnalyzerAttack(attackType, target);
+            System.out.println(attack.getDetails());
+            attack.execute();
+        } catch (IllegalArgumentException e) {
+            Logger.error("Unknown analyzer attack type: " + attackType);
+            System.out.println("Error: Unknown analyzer attack type: " + attackType);
+        }
+    }
+    
+    private void performGeneralAnalysis(String target, boolean detailed) {
+        System.out.println("Performing general threat analysis on " + target + "...");
         
         // Simulate different types of analysis
-        simulateLogAnalysis(inputFile, detailed);
-        simulateTrafficAnalysis(inputFile, detailed);
-        simulatePatternRecognition(inputFile, detailed);
+        simulateLogAnalysis(target, detailed);
+        simulateTrafficAnalysis(target, detailed);
+        simulatePatternRecognition(target, detailed);
         
-        generateGeneralAnalysisReport(inputFile);
+        generateGeneralAnalysisReport(target);
     }
     
-    private void performNetworkAnalysis(String inputFile, boolean detailed) {
-        System.out.println("Performing network threat analysis on " + inputFile + "...");
-        simulateNetworkAnalysis(inputFile, detailed);
-        generateNetworkAnalysisReport(inputFile);
+    private void performNetworkAnalysis(String target, boolean detailed) {
+        System.out.println("Performing network threat analysis on " + target + "...");
+        simulateNetworkAnalysis(target, detailed);
+        generateNetworkAnalysisReport(target);
     }
     
-    private void performMalwareAnalysis(String inputFile, boolean detailed) {
-        System.out.println("Performing malware analysis on " + inputFile + "...");
-        simulateMalwareAnalysis(inputFile, detailed);
-        generateMalwareAnalysisReport(inputFile);
+    private void performMalwareAnalysis(String target, boolean detailed) {
+        System.out.println("Performing malware analysis on " + target + "...");
+        simulateMalwareAnalysis(target, detailed);
+        generateMalwareAnalysisReport(target);
     }
     
-    private void performBehavioralAnalysis(String inputFile, boolean detailed) {
-        System.out.println("Performing behavioral analysis on " + inputFile + "...");
-        simulateBehavioralAnalysis(inputFile, detailed);
-        generateBehavioralAnalysisReport(inputFile);
+    private void performBehavioralAnalysis(String target, boolean detailed) {
+        System.out.println("Performing behavioral analysis on " + target + "...");
+        simulateBehavioralAnalysis(target, detailed);
+        generateBehavioralAnalysisReport(target);
     }
     
-    private void simulateLogAnalysis(String inputFile, boolean detailed) {
+    private void simulateLogAnalysis(String target, boolean detailed) {
         System.out.println("[+] Analyzing system logs...");
         if (detailed) {
             System.out.println("    Checking authentication logs...");
@@ -136,7 +160,7 @@ public class ThreatAnalyzer {
         }
     }
     
-    private void simulateTrafficAnalysis(String inputFile, boolean detailed) {
+    private void simulateTrafficAnalysis(String target, boolean detailed) {
         System.out.println("[+] Analyzing network traffic patterns...");
         if (detailed) {
             System.out.println("    Baseline traffic: 1,200 requests/hour");
@@ -146,7 +170,7 @@ public class ThreatAnalyzer {
         }
     }
     
-    private void simulatePatternRecognition(String inputFile, boolean detailed) {
+    private void simulatePatternRecognition(String target, boolean detailed) {
         System.out.println("[+] Recognizing threat patterns...");
         if (detailed) {
             System.out.println("    Detecting brute force patterns...");
@@ -155,7 +179,7 @@ public class ThreatAnalyzer {
         }
     }
     
-    private void simulateNetworkAnalysis(String inputFile, boolean detailed) {
+    private void simulateNetworkAnalysis(String target, boolean detailed) {
         System.out.println("[+] Performing deep network analysis...");
         if (detailed) {
             System.out.println("    Analyzing packet captures...");
@@ -165,7 +189,7 @@ public class ThreatAnalyzer {
         }
     }
     
-    private void simulateMalwareAnalysis(String inputFile, boolean detailed) {
+    private void simulateMalwareAnalysis(String target, boolean detailed) {
         System.out.println("[+] Scanning for malware signatures...");
         if (detailed) {
             System.out.println("    Checking file hashes against virus databases...");
@@ -175,7 +199,7 @@ public class ThreatAnalyzer {
         }
     }
     
-    private void simulateBehavioralAnalysis(String inputFile, boolean detailed) {
+    private void simulateBehavioralAnalysis(String target, boolean detailed) {
         System.out.println("[+] Analyzing user behavior patterns...");
         if (detailed) {
             System.out.println("    Establishing baseline behavior profiles...");
@@ -185,10 +209,10 @@ public class ThreatAnalyzer {
         }
     }
     
-    private void generateGeneralAnalysisReport(String inputFile) {
+    private void generateGeneralAnalysisReport(String target) {
         System.out.println("\n" + "=".repeat(50));
         System.out.println("GENERAL THREAT ANALYSIS REPORT");
-        System.out.println("Source: " + inputFile);
+        System.out.println("Target: " + target);
         System.out.println("=".repeat(50));
         System.out.println("THREAT LEVEL: HIGH");
         System.out.println("\nDETECTED THREATS:");
@@ -207,10 +231,10 @@ public class ThreatAnalyzer {
         System.out.println("  4. Review and patch vulnerable applications");
     }
     
-    private void generateNetworkAnalysisReport(String inputFile) {
+    private void generateNetworkAnalysisReport(String target) {
         System.out.println("\n" + "=".repeat(50));
         System.out.println("NETWORK THREAT ANALYSIS REPORT");
-        System.out.println("Source: " + inputFile);
+        System.out.println("Target: " + target);
         System.out.println("=".repeat(50));
         System.out.println("THREAT LEVEL: CRITICAL");
         System.out.println("\nNETWORK THREATS:");
@@ -228,10 +252,10 @@ public class ThreatAnalyzer {
         System.out.println("  4. Initiate incident response procedure");
     }
     
-    private void generateMalwareAnalysisReport(String inputFile) {
+    private void generateMalwareAnalysisReport(String target) {
         System.out.println("\n" + "=".repeat(50));
         System.out.println("MALWARE ANALYSIS REPORT");
-        System.out.println("Source: " + inputFile);
+        System.out.println("Target: " + target);
         System.out.println("=".repeat(50));
         System.out.println("INFECTION CONFIDENCE: 92%");
         System.out.println("\nMALWARE IDENTIFIED:");
@@ -248,10 +272,10 @@ public class ThreatAnalyzer {
         System.out.println("  4. Reimage system from clean backup");
     }
     
-    private void generateBehavioralAnalysisReport(String inputFile) {
+    private void generateBehavioralAnalysisReport(String target) {
         System.out.println("\n" + "=".repeat(50));
         System.out.println("BEHAVIORAL ANALYSIS REPORT");
-        System.out.println("Source: " + inputFile);
+        System.out.println("Target: " + target);
         System.out.println("=".repeat(50));
         System.out.println("ANOMALY CONFIDENCE: 87%");
         System.out.println("\nSUSPICIOUS BEHAVIORS:");

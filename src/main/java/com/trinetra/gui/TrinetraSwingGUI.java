@@ -32,15 +32,16 @@ public class TrinetraSwingGUI extends JFrame {
         targetField = new JTextField("http://example.com", 30);
         
         operationCombo = new JComboBox<>(new String[]{
-            "Scan for Vulnerabilities",
-            "Analyze Threats",
+            "Scanner Attacks",
+            "Analyzer Attacks",
             "Apply Defenses"
         });
         
         scanTypeCombo = new JComboBox<>(new String[]{
-            "Quick Scan",
+            "Port Scan",
+            "Directory Enumeration",
             "SQL Injection",
-            "XSS Vulnerabilities",
+            "XSS Analysis",
             "Full Scan"
         });
     }
@@ -139,11 +140,11 @@ public class TrinetraSwingGUI extends JFrame {
     
     private void simulateExecution(String operation, String scanType, String target) {
         switch (operation) {
-            case "Scan for Vulnerabilities":
-                performScan(scanType, target);
+            case "Scanner Attacks":
+                performScannerAttack(scanType, target);
                 break;
-            case "Analyze Threats":
-                performAnalysis(target);
+            case "Analyzer Attacks":
+                performAnalyzerAttack(scanType, target);
                 break;
             case "Apply Defenses":
                 applyDefenses();
@@ -238,6 +239,93 @@ public class TrinetraSwingGUI extends JFrame {
         outputArea.append("2. System hardening\n");
         outputArea.append("3. Security configuration\n");
         outputArea.append("\nDefenses applied successfully.\n");
+        outputArea.append("----------------------------------------\n");
+    }
+    
+    private void performScannerAttack(String attackType, String target) {
+        outputArea.append("Executing Scanner Attack: " + attackType + " on " + target + "\n");
+        
+        switch (attackType) {
+            case "Port Scan":
+                outputArea.append("Scanner Attack: Port Scan\n");
+                outputArea.append("Description: Scans open ports on target system\n");
+                outputArea.append("Severity: 6/10\n");
+                outputArea.append("[+] Scanning ports on " + target + "...\n");
+                outputArea.append("Port 21: CLOSED\n");
+                outputArea.append("Port 22: OPEN\n");
+                outputArea.append("Port 23: CLOSED\n");
+                outputArea.append("Port 25: CLOSED\n");
+                outputArea.append("Port 53: OPEN\n");
+                outputArea.append("Port 80: OPEN\n");
+                outputArea.append("Port 110: CLOSED\n");
+                outputArea.append("Port 443: OPEN\n");
+                outputArea.append("Port 3306: OPEN\n");
+                outputArea.append("Port 5432: CLOSED\n");
+                outputArea.append("Port scan completed.\n");
+                break;
+                
+            case "Directory Enumeration":
+                outputArea.append("Scanner Attack: Directory Enumeration\n");
+                outputArea.append("Description: Finds hidden directories and files\n");
+                outputArea.append("Severity: 5/10\n");
+                outputArea.append("[+] Enumerating directories on " + target + "...\n");
+                outputArea.append("Found: " + target + "/admin\n");
+                outputArea.append("Found: " + target + "/backup\n");
+                outputArea.append("Found: " + target + "/api\n");
+                outputArea.append("Directory enumeration completed.\n");
+                break;
+                
+            case "Full Scan":
+                outputArea.append("Scanner Attack: Full Scan\n");
+                outputArea.append("Description: Comprehensive scanning of target\n");
+                outputArea.append("Severity: 7/10\n");
+                outputArea.append("[+] Scanning ports on " + target + "...\n");
+                outputArea.append("Port 22: OPEN\n");
+                outputArea.append("Port 80: OPEN\n");
+                outputArea.append("Port 443: OPEN\n");
+                outputArea.append("[+] Enumerating directories...\n");
+                outputArea.append("Found: " + target + "/admin\n");
+                outputArea.append("Found: " + target + "/api\n");
+                outputArea.append("Full scan completed.\n");
+                break;
+                
+            default:
+                outputArea.append("Unknown scanner attack type: " + attackType + "\n");
+        }
+        
+        outputArea.append("\nScanner attack completed successfully.\n");
+        outputArea.append("----------------------------------------\n");
+    }
+    
+    private void performAnalyzerAttack(String attackType, String target) {
+        outputArea.append("Executing Analyzer Attack: " + attackType + " on " + target + "\n");
+        
+        switch (attackType) {
+            case "SQL Injection":
+                outputArea.append("Analyzer Attack: SQL Injection\n");
+                outputArea.append("Description: Tests for SQL injection vulnerabilities\n");
+                outputArea.append("Severity: 9/10\n");
+                outputArea.append("[+] Testing for SQL injection on " + target + "...\n");
+                outputArea.append("VULNERABLE: Payload '' OR '1'='1' was successful\n");
+                outputArea.append("VULNERABLE: Payload '; DROP TABLE users; --' was successful\n");
+                outputArea.append("SQL injection analysis completed.\n");
+                break;
+                
+            case "XSS Analysis":
+                outputArea.append("Analyzer Attack: XSS Analysis\n");
+                outputArea.append("Description: Tests for Cross-Site Scripting vulnerabilities\n");
+                outputArea.append("Severity: 7/10\n");
+                outputArea.append("[+] Testing for XSS on " + target + "...\n");
+                outputArea.append("VULNERABLE: Payload '<script>alert('XSS')</script>' was successful\n");
+                outputArea.append("VULNERABLE: Payload 'javascript:alert('XSS')' was successful\n");
+                outputArea.append("XSS analysis completed.\n");
+                break;
+                
+            default:
+                outputArea.append("Unknown analyzer attack type: " + attackType + "\n");
+        }
+        
+        outputArea.append("\nAnalyzer attack completed successfully.\n");
         outputArea.append("----------------------------------------\n");
     }
     

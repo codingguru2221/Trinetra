@@ -39,9 +39,17 @@ public class TrinetraEngine {
         System.out.println("  defend   - Apply defense mechanisms");
         System.out.println("  help     - Show this help message");
         System.out.println();
+        System.out.println("Scanner Attack Types:");
+        System.out.println("  portscan  - Scan open ports on target");
+        System.out.println("  directory - Enumerate directories and files");
+        System.out.println();
+        System.out.println("Analyzer Attack Types:");
+        System.out.println("  sqli - Test for SQL injection vulnerabilities");
+        System.out.println("  xss  - Test for Cross-Site Scripting vulnerabilities");
+        System.out.println();
         System.out.println("Examples:");
-        System.out.println("  java -jar Trinetra.jar scan --target http://example.com");
-        System.out.println("  java -jar Trinetra.jar analyze --file report.txt");
+        System.out.println("  java -jar Trinetra.jar scan --target http://example.com --type portscan");
+        System.out.println("  java -jar Trinetra.jar analyze --target http://example.com --type sqli");
     }
     
     public void processCommand(String[] args) {

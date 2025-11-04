@@ -11,6 +11,8 @@ Trinetra's mission is simple yet powerful: to help cybersecurity experts uncover
 - **Vulnerability Scanning**: Detect common security issues including SQL injection, XSS, and misconfigurations
 - **Threat Analysis**: Identify potential threats from log files and network traffic
 - **Defense Mechanisms**: Apply security measures to strengthen system defenses
+- **Scanner Attacks**: Discovery and mapping attacks (Port scanning, Directory enumeration, etc.)
+- **Analyzer Attacks**: Exploitation and manipulation attacks (SQL injection, XSS, etc.)
 - **Modular Architecture**: Extensible design with separate modules for scanning, analysis, and defense
 
 ## Prerequisites
@@ -48,6 +50,12 @@ java -jar target/Trinetra-1.0-SNAPSHOT.jar help
 # Scan a target for SQL injection vulnerabilities
 java -jar target/Trinetra-1.0-SNAPSHOT.jar scan --target http://example.com --type sql
 
+# Scan a target for open ports
+java -jar target/Trinetra-1.0-SNAPSHOT.jar scan --target http://example.com --type portscan
+
+# Analyze a target for SQL injection vulnerabilities
+java -jar target/Trinetra-1.0-SNAPSHOT.jar analyze --target http://example.com/login --type sqli
+
 # Analyze threats from a log file
 java -jar target/Trinetra-1.0-SNAPSHOT.jar analyze --file security.log --type network
 
@@ -71,7 +79,16 @@ Analyzes potential threats from various sources:
 - Behavioral analysis
 - Malware detection
 
-### 3. Defense Mechanism (`com.trinetra.defense`)
+### 3. Attack Modules (`com.trinetra.attacks`)
+Implementation of specific attack types:
+- **Scanner Attacks**: Discovery and mapping attacks
+  - PortScanner: Scans open ports on target systems
+  - DirectoryEnumerator: Finds hidden directories and files
+- **Analyzer Attacks**: Exploitation and manipulation attacks
+  - SQLInjectionAnalyzer: Tests for SQL injection vulnerabilities
+  - XSSAnalyzer: Tests for Cross-Site Scripting vulnerabilities
+
+### 4. Defense Mechanism (`com.trinetra.defense`)
 Applies security measures to strengthen defenses:
 - Firewall configuration
 - System hardening
@@ -105,6 +122,9 @@ com.trinetra
 ├── scanner (Vulnerability scanning)
 ├── analyzer (Threat analysis)
 ├── defense (Defense mechanisms)
+├── attacks (Specific attack implementations)
+│   ├── scanner (Scanner attack types)
+│   └── analyzer (Analyzer attack types)
 └── utils (Utility classes)
 ```
 
