@@ -1,0 +1,81 @@
+Nice — here’s a clear, practical rundown of the common types of cyber-attacks that happen to **web pages/web apps**, what they look like, and how to defend against them.
+
+# Common web attacks (what they are)
+
+* **SQL Injection (SQLi)** — attacker injects SQL into input fields to read/modify the database.
+* **Cross-Site Scripting (XSS)** — attacker injects malicious JavaScript into pages (reflected, stored, or DOM-based).
+* **Cross-Site Request Forgery (CSRF)** — attacker tricks a logged-in user’s browser into performing actions the user didn’t intend.
+* **Server-Side Request Forgery (SSRF)** — attacker makes the server perform requests to internal/external services it shouldn’t reach.
+* **Remote Code Execution (RCE)** / Command injection — attacker executes arbitrary code/commands on the server.
+* **File Upload / Insecure File Handling** — uploading malicious files (web shells, exe) that get executed or served.
+* **Insecure Deserialization** — untrusted data deserialized into objects that trigger code execution or logic changes.
+* **Authentication attacks** — brute force, credential stuffing (using leaked passwords), or weak password attacks.
+* **Session Hijacking / Session Fixation** — stealing or forcing session identifiers to impersonate users.
+* **Open Redirects** — attacker uses site links to redirect users to malicious sites (phishing helpers).
+* **Clickjacking (UI redress)** — attacker overlays the page to trick users into clicking hidden buttons.
+* **Directory Traversal / Path Traversal** — attacker accesses files outside intended directories (e.g., `../../etc/passwd`).
+* **Insecure Direct Object References (IDOR)** / Broken access control — accessing other users’ objects by tampering with identifiers.
+* **Man-in-the-Middle (MITM)** — attacker intercepts traffic between user and server (often on insecure HTTP).
+* **Distributed Denial of Service (DDoS)** / Rate-limit abuse — overwhelming the site with traffic to make it unavailable.
+* **Malvertising / Drive-by downloads** — malicious ads or compromised third-party scripts that infect users.
+* **Supply-chain / Third-party library compromise** — upstream library or CDN gets malicious code inserted.
+* **Business-logic flaws** — flaws in flows (e.g., coupon stacking, bypassing approvals) that let attackers abuse intended behavior.
+* **Information disclosure / Sensitive data exposure** — leaking secrets (API keys, personal data) via logs, URLs, or misconfigurations.
+
+# Typical indicators of compromise
+
+* Strange DB queries or new DB users appearing.
+* Unexpected page content, popups, or JS executing (for XSS).
+* Unusual spikes in traffic, many 404/500 errors, long response times (DDoS or scanning).
+* New files on the server (web shells) or changed file timestamps.
+* Unauthorized account actions, password resets, or new admin users.
+* API keys leaking in public repos or in logs.
+* Alerts from WAF, IDS/IPS, or security scanners.
+
+# High-impact prevention & hardening (practical measures)
+
+* **Input validation & output encoding** — validate inputs server-side; escape/encode output to avoid XSS.
+* **Use parameterized queries / prepared statements** for all DB access to prevent SQLi.
+* **Implement proper auth** — use strong password rules, rate-limit login attempts, and enable **MFA** for privileged accounts.
+* **CSRF tokens** and `SameSite` cookies to prevent forged requests.
+* **Use HTTPS everywhere** (HSTS) to stop MITM.
+* **Secure file upload handling** — block dangerous file types, store uploads outside webroot, scan content.
+* **Content Security Policy (CSP)**, secure/HttpOnly cookie flags, X-Frame-Options, X-Content-Type-Options headers.
+* **Principle of least privilege** — services and DB users only get required permissions.
+* **Keep software up to date** — OS, web server, frameworks, and libraries. Monitor for CVEs.
+* **WAF / Runtime protection** — web application firewall for known patterns + rate limiting.
+* **Input sanitization for deserialization** or avoid deserializing untrusted data.
+* **Secure CI/CD and dependency management** — lockfile, verify packages, sign artifacts.
+* **Logging, monitoring & alerting** — centralized logs, unusual behavior detection, and retention.
+* **Pen testing and automated scanning** — SAST/DAST, dependency scanners, and regular pentests.
+* **Backup & incident plan** — tested backups and a defined incident response playbook.
+
+# Quick mitigation steps if you suspect an attack
+
+1. **Take affected systems offline** or put them behind maintenance page (to stop further damage).
+2. **Rotate credentials and API keys** that may be exposed.
+3. **Collect logs and evidence** (timestamps, IPs, request payloads) — don’t overwrite logs.
+4. **Patch the vulnerability** (e.g., fix the input validation, change queries to parameterized ones).
+5. **Restore from clean backups** if files were modified and you can’t ensure integrity.
+6. **Notify affected users and stakeholders** if sensitive data was leaked (follow legal/contractual rules).
+7. **Hunt for persistence** (web shells, new admin accounts) and remove them.
+8. **Perform a post-incident review** and update controls to prevent recurrence.
+
+# Short checklist you can run right now
+
+* Are you using HTTPS + HSTS?
+* Do you have parameterized DB queries?
+* Is input/output escaped properly?
+* Are dependencies up to date and scanned?
+* Is MFA enabled for all admin accounts?
+* Do you have WAF and rate limiting configured?
+* Are logs centralized and monitored?
+
+---
+
+If you want, I can:
+
+* analyze a specific page or snippet you paste and point out vulnerabilities, or
+* give a prioritized checklist tailored to your web stack (e.g., Node/Express + React + Postgres).
+
+Which would you like next?
