@@ -4,6 +4,7 @@ import com.trinetra.core.TrinetraEngine;
 import com.trinetra.utils.Logger;
 import com.trinetra.gui.TrinetraGUI;
 import com.trinetra.gui.TrinetraSwingGUI;
+import com.trinetra.gui.ModernTrinetraGUI;
 
 /**
  * Trinetra - An advanced Java-based cybersecurity tool built to detect vulnerabilities,
@@ -28,6 +29,13 @@ public class App
             Logger.info("Starting Trinetra Swing GUI...");
             // Launch Swing GUI
             TrinetraSwingGUI.main(args);
+            return;
+        }
+        
+        if (args.length > 0 && "--modern".equals(args[0])) {
+            Logger.info("Starting Trinetra Modern GUI...");
+            // Launch Modern JavaFX GUI
+            ModernTrinetraGUI.main(args);
             return;
         }
         

@@ -74,6 +74,25 @@ public class TrinetraEngine {
         }
     }
     
+    /**
+     * Perform a scan with the specified target and type
+     * @param target The target URL to scan
+     * @param type The type of scan to perform
+     */
+    public void performScan(String target, String type) {
+        Logger.info("Executing vulnerability scan...");
+        scanner.performScan(new String[]{"--target", target, "--type", type});
+    }
+    
+    /**
+     * Perform a scan with the specified target
+     * @param target The target URL to scan
+     */
+    public void performScan(String target) {
+        Logger.info("Executing vulnerability scan...");
+        scanner.performScan(new String[]{"--target", target});
+    }
+    
     private void handleScanCommand(String[] args) {
         Logger.info("Executing vulnerability scan...");
         scanner.performScan(args);

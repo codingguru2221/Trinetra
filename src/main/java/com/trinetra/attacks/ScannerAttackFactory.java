@@ -2,6 +2,7 @@ package com.trinetra.attacks;
 
 import com.trinetra.attacks.scanner.PortScanner;
 import com.trinetra.attacks.scanner.DirectoryEnumerator;
+import com.trinetra.attacks.scanner.SSLTLSScanner;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class ScannerAttackFactory {
     static {
         attackDescriptions.put("portscan", "Scans open ports on target system");
         attackDescriptions.put("directory", "Finds hidden directories and files");
+        attackDescriptions.put("ssl", "Analyzes SSL/TLS configuration for vulnerabilities");
     }
     
     /**
@@ -29,6 +31,8 @@ public class ScannerAttackFactory {
                 return new PortScanner(target);
             case "directory":
                 return new DirectoryEnumerator(target);
+            case "ssl":
+                return new SSLTLSScanner(target);
             default:
                 throw new IllegalArgumentException("Unknown scanner attack type: " + attackType);
         }
