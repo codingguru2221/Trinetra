@@ -1,0 +1,151 @@
+# Quick guide — common cyber attacks on websites (what they are, how to spot them, and how to defend)
+
+Nice — here’s a compact, practical reference you can use while building or securing a website. I’ve kept exploit details out (so nothing that could be used to attack systems) and focused on how attacks work, indicators, impact, and strong mitigations.
+
+---
+
+## Top website attacks (short descriptions + quick mitigations)
+
+### 1. SQL Injection (SQLi)
+
+**What:** Attacker injects SQL through input fields to read/modify database.
+**Indicators:** unusual DB errors in logs, unexpected data exports, suspicious query patterns.
+**Impact:** data theft, data loss, full DB compromise.
+**Mitigation:** use parameterized queries / prepared statements, ORM safe APIs, input validation, least privilege DB accounts, WAF rules, regular DB audit.
+
+### 2. Cross-Site Scripting (XSS)
+
+**What:** Malicious script injected into pages viewed by other users (reflected / stored / DOM).
+**Indicators:** users report weird popups or redirects, unexpected scripts in pages, CSP violations.
+**Impact:** session theft, account takeover, phishing.
+**Mitigation:** output-encoding, sanitize user input on output, Content Security Policy (CSP), HttpOnly cookies, input validation.
+
+### 3. Cross-Site Request Forgery (CSRF)
+
+**What:** Victim’s browser performs an unwanted action (because user is authenticated).
+**Indicators:** unusual transactions after a user visits a third-party site, forged form posts.
+**Impact:** unauthorized actions (change password, transfer funds).
+**Mitigation:** CSRF tokens, same-site cookies, require re-auth for sensitive actions, validate Origin/Referer headers.
+
+### 4. Broken Authentication & Session Management
+
+**What:** Weak credential handling or session tokens allow hijack.
+**Indicators:** many login failures, suspicious session reuse, long-lived sessions.
+**Impact:** account takeover, privilege escalation.
+**Mitigation:** multi-factor auth (MFA), rate limit login attempts, secure cookie flags (Secure, HttpOnly, SameSite), short session timeouts, rotate tokens on privilege change.
+
+### 5. Remote Code Execution (RCE) & Insecure Deserialization
+
+**What:** Attacker runs code or crafts object data to trigger dangerous behavior.
+**Indicators:** unusual process execution, new files or processes, remote shells.
+**Impact:** full server compromise.
+**Mitigation:** avoid unsafe deserialization, validate input types, run services with least privileges, containerization, patching, runtime monitoring.
+
+### 6. Server-Side Request Forgery (SSRF)
+
+**What:** App fetches attacker-supplied URLs — can reach internal services.
+**Indicators:** outgoing requests to internal IPs, strange internal service activity.
+**Impact:** access internal resources (metadata services), pivoting.
+**Mitigation:** whitelist external hosts, network segmentation, block metadata endpoints, validate and sanitize URLs.
+
+### 7. File Upload / Path Traversal / Directory Traversal
+
+**What:** Uploads or path inputs used to overwrite/read files on server.
+**Indicators:** new unexpected files, tampered site content, access to `/etc`-like resources.
+**Impact:** code injection, data theft.
+**Mitigation:** validate file types, store uploads outside webroot, enforce safe filenames, restrict permissions, virus-scan uploads.
+
+### 8. Denial of Service (DoS) / Rate Abuse
+
+**What:** Overwhelm service via traffic or expensive operations.
+**Indicators:** high CPU/latency, resource exhaustion, weird traffic spikes.
+**Impact:** downtime, degraded performance.
+**Mitigation:** rate limiting, autoscaling, CDN, circuit breakers, request quotas, caching, WAF/anti-DDoS service.
+
+### 9. Credential Stuffing / Brute Force
+
+**What:** Automated attempts using leaked credentials.
+**Indicators:** many failed logins from few IPs or many IPs, unusual geographic patterns.
+**Impact:** account takeover.
+**Mitigation:** MFA, block reused passwords, rate limit + account lockout, device fingerprinting, anomaly detection.
+
+### 10. Supply-chain / Dependency Attacks
+
+**What:** Malicious or compromised third-party libraries or CI/CD pipeline.
+**Indicators:** unexpected code changes, dependency integrity failures, unusual commits in vendor repos.
+**Impact:** backdoors in your builds.
+**Mitigation:** pin module versions, use SBOMs, verify signatures, least privilege CI tokens, review third-party code, use private package proxies.
+
+---
+
+## Detection & logging — what to monitor
+
+* Centralized logs (web, app, DB, auth). Retain and protect integrity.
+* WAF alerts, IDS/IPS alerts.
+* Authentication/authorization anomalies (logins, password changes, new API keys).
+* Unexpected outbound network traffic from servers.
+* File integrity monitoring (notify on changed binaries/configs).
+* Error and exception spikes (could indicate probing).
+* Endpoint telemetry (EDR) for process creation and lateral movement.
+
+---
+
+## Practical defenses & secure defaults (prioritized checklist)
+
+1. **Input handling:** Validate inputs server-side and escape/encode on output.
+2. **DB safety:** Use parameterized queries / ORM safe methods. Least privilege DB accounts.
+3. **Auth & sessions:** MFA, enforce strong passwords, secure cookies, short sessions.
+4. **Transport:** Enforce HTTPS everywhere, HSTS, TLS 1.2+/strong ciphers.
+5. **Security headers:** CSP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy.
+6. **Dependencies:** Regularly patch OS, libs, frameworks; use dependency scanning.
+7. **Network:** Segmentation, private subnets for internal services, restrict metadata access.
+8. **WAF & rate limiting:** Block common patterns, throttle suspicious behavior.
+9. **CI/CD security:** Protect secrets; review pipelines for integrity; sign releases.
+10. **Backups & recovery:** Test restore procedures; keep backups offsite and immutable.
+11. **Least privilege:** Both on app processes and service accounts.
+12. **Secure default configs:** Disable debug endpoints, avoid verbose error messages in production.
+
+---
+
+## Testing & validation
+
+* **Static Application Security Testing (SAST):** code analysis to find common patterns.
+* **Dynamic Application Security Testing (DAST):** run scanners against running app (e.g., OWASP ZAP).
+* **Interactive Application Security Testing (IAST)** where available.
+* **Dependency scanning** (SCA) for known vulnerable packages.
+* **Periodic authorized penetration tests** by skilled red teams — focus on business-critical flows.
+* **Threat modeling** for important features and privileged actions.
+
+(If you want, I can give an ordered testing plan tailored to a small/medium website.)
+
+---
+
+## Incident response — short checklist
+
+1. Contain: block attacker IPs, WAF rules, isolate affected hosts.
+2. Preserve: secure logs, create forensic snapshots (don’t overwrite evidence).
+3. Eradicate: remove backdoors, rotate credentials, patch vulnerabilites.
+4. Recover: restore services from clean backups, monitor closely.
+5. Notify: follow legal/regulatory and internal disclosure requirements.
+6. Post-mortem: root-cause analysis, update controls and playbooks.
+
+---
+
+## Useful resources & tools (defensive)
+
+* OWASP Top 10 & OWASP ASVS — threat-focused guidance.
+* OWASP ZAP, Burp Suite (for authorized testing).
+* Snyk / Dependabot / OSS security scanners (dependency checks).
+* WAF (Cloudflare, AWS WAF, ModSecurity) and CDNs for edge protection.
+* SIEM / Log aggregation (ELK, Splunk, Datadog) for detection.
+* RASP / EDR for runtime protection and endpoint visibility.
+
+---
+
+If you want, I can:
+
+* produce a one-page **security checklist** for your project, or
+* run through **OWASP Top 10** but mapped to the tech stack you’re using (e.g., Java + Spring Boot + PostgreSQL), or
+* help draft an **incident response playbook** tailored to your team.
+
+Which of those would be most useful next?
